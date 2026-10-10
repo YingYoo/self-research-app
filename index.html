@@ -142,7 +142,15 @@ setTimeout(()=>{addMessage('我先把这段话保存成一条经历。暂时识�
 }
 function detectEmotion(t){let map=[['焦虑',/焦虑|担心|害怕|紧张/],['烦躁',/烦|生气|愤怒|讨厌/],['失落',/失落|难过|伤心|孤独/],['迷茫',/迷茫|不知道|不清楚/],['平静',/平静|还好|没什么/]];return (map.find(x=>x[1].test(t))||[])[0]||'待确认'}
 $('sendBtn').addEventListener('click',send);$('chatInput').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();send()}});
-function recordHtml(r){return `<div class="record"><div class="record-top"><span class="sub">${new Date(r.date).toLocaleDateString('zh-CN')} · ${esc(r.emotion)}</span><span class="tag">${esc(r.tags[0]||'观察')}</span></div><h3>${esc(r.title)}</h3><p>${esc(r.raw)}</p><div style="margin-top:9px"><button class="secondary" onclick="openDetail(${r.id})">查看详情</button></div></div>`}
+function recordHtml(r){
+  const title=String(r.title||'未命名').trim();
+  const raw=String(r.raw||'').trim();
+  const summary=summarize(raw);
+  // 自动生成的标题本来就是正文摘要：列表只显示一次，避免标题和正文重复。
+  // 只有标题确实不同于正文/自动摘要时，才显示正文摘要作为补充。
+  const showPreview=!!raw && raw!==title && summary!==title && raw!==title.replace(/…$/,'');
+  return `<div class="record"><div class="record-top"><span class="sub">${new Date(r.date).toLocaleDateString('zh-CN')} · ${esc(r.emotion||'待确认')}</span><span class="tag">${esc((r.tags||[])[0]||'观察')}</span></div><h3>${esc(title)}</h3>${showPreview?`<p>${esc(summary)}</p>`:''}<div style="margin-top:9px"><button class="secondary" onclick="openDetail(${Number(r.id)})">查看详情</button></div></div>`
+}
 function renderAll(){
 $('statRecords').textContent=records.length;
 $('statTopics').textContent=new Set(records.flatMap(r=>r.tags)).size;
@@ -223,7 +231,7 @@ function exportTXT(){
 }
 function exportHTML(){
   const safe=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-  const recordCards=records.map(r=>`<article><div class="meta">${safe(new Date(r.date).toLocaleString('zh-CN'))} · ${safe(r.emotion||'待确认')}</div><h2>${safe(r.title||'未命名')}</h2><div class="tags">${(r.tags||[]).map(t=>`<span>${safe(t)}</span>`).join(' ')}</div><p class="raw">${safe(r.raw||'').replace(/\n/g,'<br>')}</p>${r.question?`<p><b>待研究问题：</b>${safe(r.question)}</p>`:''}${r.behavior?`<p><b>行为：</b>${safe(r.behavior)}</p>`:''}</article>`).join('');
+  const recordCards=records.map(r=>{const title=String(r.title||'未命名').trim(),raw=String(r.raw||'').trim(),showRaw=raw&&raw!==title&&summarize(raw)!==title&&raw!==title.replace(/…$/,'');return `<article><div class="meta">${safe(new Date(r.date).toLocaleString('zh-CN'))} · ${safe(r.emotion||'待确认')}</div><h2>${safe(title)}</h2><div class="tags">${(r.tags||[]).map(t=>`<span>${safe(t)}</span>`).join(' ')}</div>${showRaw?`<p class="raw">${safe(raw).replace(/\n/g,'<br>')}</p>`:''}${r.question?`<p><b>待研究问题：</b>${safe(r.question)}</p>`:''}${r.behavior?`<p><b>行为：</b>${safe(r.behavior)}</p>`:''}</article>`}).join('');
   const experimentCards=experiments.map((e,i)=>`<article><h2>行为实验 ${i+1}</h2><p><b>想验证的猜测：</b>${safe(e.hypothesis)}</p><p><b>准备尝试：</b>${safe(e.action)}</p><div class="meta">${safe(e.date?new Date(e.date).toLocaleString('zh-CN'):'')}</div></article>`).join('');
   const html=`<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>研究自己｜个人资料</title><style>body{margin:0;background:#f5f5f0;color:#202a26;font:16px/1.75 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}main{max-width:820px;margin:auto;padding:24px 16px}header{background:#dcebe1;padding:22px;border-radius:18px;margin-bottom:22px}h1{margin:0 0 6px;font-size:26px}h2{font-size:18px;margin:8px 0}.meta{font-size:13px;color:#758078}.tags span{display:inline-block;background:#edf3ed;color:#476553;border-radius:99px;padding:2px 10px;margin:4px 4px 4px 0;font-size:12px}article{background:white;border:1px solid #e6e9e3;border-radius:16px;padding:18px;margin:14px 0;overflow-wrap:anywhere}.raw{white-space:pre-wrap}.empty{color:#758078}footer{color:#758078;font-size:12px;margin:24px 0}</style></head><body><main><header><h1>研究自己｜个人资料</h1><div>导出时间：${safe(new Date().toLocaleString('zh-CN'))}</div><div>经历记录 ${records.length} 条 · 行为实验 ${experiments.length} 个</div></header><h2>个人经历记录</h2>${recordCards||'<p class="empty">暂无经历记录。</p>'}<h2>行为实验</h2>${experimentCards||'<p class="empty">暂无行为实验。</p>'}<footer>本文件为离线阅读副本。修改此文件不会更改 App 中的记录。</footer></main></body></html>`;
   downloadFile('研究自己-阅读网页版.html',html,'text/html;charset=utf-8');
