@@ -88,7 +88,7 @@ footer{font-size:11px;color:#8a938b;margin-top:22px}
   <section class="view" id="view-records">
     <div class="card">
       <div class="section-title"><h2>个人经历库</h2></div>
-      <div class="export-actions" style="margin:12px 0 14px"><button class="secondary" onclick="exportTXT()">导出 TXT 阅读版</button><button class="secondary" onclick="exportHTML()">导出 HTML 网页版</button><button class="secondary" onclick="exportJSON()">导出 JSON 备份</button></div>
+      <div class="export-actions" style="margin:12px 0 14px;display:flex;flex-wrap:wrap;gap:8px"><button class="secondary" onclick="exportTXT()">导出 TXT 阅读版</button><button class="secondary" onclick="exportHTML()">导出 HTML 网页版</button><button class="secondary" onclick="exportJSON()">导出 JSON 备份</button><button class="primary" onclick="$('importFile').click()">导入 JSON 恢复备份</button><input id="importFile" type="file" accept=".json,application/json" style="display:none" onchange="importJSONFile(event)"></div>
       <div class="sub">记录保存在这台设备的当前浏览器中。可搜索、查看或删除。</div>
       <input class="search" id="searchInput" placeholder="搜索关键词、情绪或主题…">
       <div id="allRecords"></div>
@@ -168,6 +168,47 @@ function downloadFile(filename, content, type){
 function exportJSON(){
   const data={app:'研究自己',exportedAt:new Date().toISOString(),records,experiments};
   downloadFile('研究自己-完整备份.json',JSON.stringify(data,null,2),'application/json;charset=utf-8');
+}
+function importJSONFile(event){
+  const file=event.target.files&&event.target.files[0];
+  if(!file)return;
+  const reader=new FileReader();
+  reader.onload=()=>{
+    try{
+      const data=JSON.parse(String(reader.result||''));
+      const incomingRecords=Array.isArray(data)?data:(Array.isArray(data.records)?data.records:(Array.isArray(data.experiences)?data.experiences:[]));
+      const incomingExperiments=Array.isArray(data.experiments)?data.experiments:(Array.isArray(data.behaviorExperiments)?data.behaviorExperiments:[]);
+      if(!incomingRecords.length&&!incomingExperiments.length){
+        alert('这个 JSON 文件里没有找到可导入的经历记录或行为实验。请确认选择的是“研究自己-完整备份.json”。');
+        return;
+      }
+      const beforeRecords=records.length, beforeExperiments=experiments.length;
+      if(!confirm(`准备导入：经历记录 ${incomingRecords.length} 条，行为实验 ${incomingExperiments.length} 个。\n\n为保护现有内容，本次采用“合并”方式，不会清空当前记录；相同 ID 的记录保留当前版本。是否继续？`))return;
+      const recordMap=new Map();
+      records.forEach((r,i)=>recordMap.set(String(r.id??('current-'+i)),r));
+      let addedRecords=0;
+      incomingRecords.forEach((r,i)=>{
+        if(!r||typeof r!=='object')return;
+        const key=String(r.id??('import-'+(r.date||'')+'-'+(r.raw||r.title||i)));
+        if(!recordMap.has(key)){recordMap.set(key,r);addedRecords++;}
+      });
+      records=Array.from(recordMap.values()).sort((a,b)=>String(b.date||'').localeCompare(String(a.date||'')));
+      const expKey=e=>JSON.stringify([e.hypothesis||'',e.action||'',e.date||'']);
+      const expMap=new Map(experiments.map((e,i)=>[expKey(e)||('current-'+i),e]));
+      let addedExperiments=0;
+      incomingExperiments.forEach(e=>{
+        if(!e||typeof e!=='object')return;
+        const key=expKey(e);
+        if(!expMap.has(key)){expMap.set(key,e);addedExperiments++;}
+      });
+      experiments=Array.from(expMap.values());
+      persist();
+      alert(`导入完成！\n新增经历记录：${addedRecords} 条\n新增行为实验：${addedExperiments} 个\n\n当前合计：经历记录 ${records.length} 条，行为实验 ${experiments.length} 个。`);
+    }catch(err){alert('读取失败：文件不是有效的 JSON 备份，或文件内容已损坏。原有记录没有被更改。');}
+    finally{event.target.value='';}
+  };
+  reader.onerror=()=>{alert('无法读取这个文件，请重新选择 JSON 备份。');event.target.value='';};
+  reader.readAsText(file);
 }
 function exportTXT(){
   const lines=['研究自己｜个人资料导出','导出时间：'+new Date().toLocaleString('zh-CN'),'记录数量：'+records.length,'行为实验数量：'+experiments.length,'','='.repeat(28),'个人经历记录','='.repeat(28)];
