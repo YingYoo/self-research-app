@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#203b34">
+<title>研究自己 · Demo</title>
+<style>
+:root{--bg:#f5f5f0;--panel:#fff;--ink:#202a26;--muted:#758078;--line:#e6e9e3;--green:#24463b;--mint:#dcebe1;--gold:#e9d7a7;--shadow:0 8px 30px #172b2110}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+button,input,textarea{font:inherit}button{cursor:pointer;border:0} .app{max-width:1120px;margin:auto;min-height:100vh;display:grid;grid-template-columns:240px 1fr}
+aside{background:#203b34;color:#f4f6f1;padding:28px 18px;display:flex;flex-direction:column;gap:24px}
+.brand{display:flex;gap:10px;align-items:center;font-size:18px;font-weight:700}.logo{width:36px;height:36px;border-radius:12px;background:#dcebe1;color:#24463b;display:grid;place-items:center;font-size:21px}
+.tagline{color:#b8c9bf;font-size:12px;margin-top:-18px}.nav{display:grid;gap:8px}.nav button{background:transparent;color:#dce7df;text-align:left;padding:11px 12px;border-radius:12px}.nav button.active,.nav button:hover{background:#ffffff18;color:white}
+.side-note{margin-top:auto;border:1px solid #ffffff25;border-radius:16px;padding:14px;color:#dce7df;font-size:12px}
+main{padding:32px;min-width:0}.top{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:26px}.eyebrow{font-size:11px;letter-spacing:1.5px;color:#7d8b80;font-weight:700}.top h1{font-size:28px;letter-spacing:-.7px;margin:4px 0 0}.date{color:var(--muted);font-size:13px}
+.grid{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(250px,.85fr);gap:18px}.card{background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:22px;box-shadow:var(--shadow);min-width:0}.hero{background:var(--mint);border:0;box-shadow:none;padding:24px;margin-bottom:18px}.hero h2{margin:8px 0;font-size:22px}.hero p{color:#50675b;margin:0;max-width:650px}.pill{display:inline-flex;align-items:center;border-radius:999px;background:#ffffffa8;padding:5px 10px;font-size:12px;color:#365447}
+.section-title{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px}.section-title h2,.card h2{font-size:17px;margin:0}.sub{color:var(--muted);font-size:13px}.chat{display:flex;flex-direction:column;gap:12px}.msg{max-width:92%;padding:12px 14px;border-radius:16px;font-size:14px}.bot{background:#f1f3ef;align-self:flex-start;border-bottom-left-radius:5px}.user{background:var(--green);color:white;align-self:flex-end;border-bottom-right-radius:5px;white-space:pre-wrap}.chat-input{display:flex;gap:8px;margin-top:14px}.chat-input textarea{resize:vertical;min-height:48px;max-height:140px;flex:1;border:1px solid var(--line);border-radius:13px;padding:12px;outline:none;background:#fff}.chat-input textarea:focus,input:focus{border-color:#719b84}.primary{background:var(--green);color:white;border-radius:12px;padding:11px 16px;font-weight:600}.secondary{background:#edf2ed;color:#2f5143;border-radius:10px;padding:8px 12px}.tiny{font-size:12px;color:var(--muted);margin-top:10px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:18px}.stat{background:#fff;border:1px solid var(--line);border-radius:16px;padding:15px}.stat strong{font-size:25px;display:block}.stat span{color:var(--muted);font-size:12px}
+.record{padding:14px 0;border-bottom:1px solid var(--line)}.record:last-child{border-bottom:0}.record-top{display:flex;justify-content:space-between;gap:10px;align-items:center}.record h3{font-size:14px;margin:6px 0}.record p{margin:0;color:#67736a;font-size:13px}.tag{font-size:11px;background:#edf3ed;color:#476553;padding:4px 8px;border-radius:99px}.tag.gold{background:#f6f0df;color:#8b7139}.pattern{border-left:3px solid #8ba995;padding:2px 0 2px 12px;margin:15px 0}.pattern strong{font-size:14px}.pattern p{font-size:13px;color:var(--muted);margin:4px 0 0}
+.view{display:none}.view.active{display:block}.full{grid-column:1/-1}.list-empty{color:var(--muted);font-size:13px;padding:14px 0}.search{width:100%;border:1px solid var(--line);border-radius:12px;padding:11px 12px;margin:12px 0 2px;background:white;outline:none}.field{width:100%;border:1px solid var(--line);border-radius:12px;padding:11px 12px;background:white;outline:none}.modal-back{position:fixed;inset:0;background:#15231c66;display:none;place-items:center;padding:20px}.modal-back.open{display:grid}.modal{background:white;border-radius:20px;padding:24px;max-width:480px;width:100%}.modal h2{margin-top:0}.modal-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:18px}
+footer{font-size:11px;color:#8a938b;margin-top:22px}
+@media(max-width:780px){.app{display:block}aside{padding:14px 16px;gap:12px}.brand{font-size:16px}.tagline,.side-note{display:none}.nav{display:flex;overflow:auto;gap:5px}.nav button{white-space:nowrap;padding:8px 10px;font-size:13px}main{padding:20px 14px}.top h1{font-size:24px}.grid{grid-template-columns:1fr}.stats{gap:7px}.stat{padding:12px}.stat strong{font-size:22px}.card{padding:17px}.hero{padding:20px}}
+</style>
+</head>
+<body>
+<div class="app">
+<aside>
+  <div class="brand"><div class="logo">◉</div><span>研究自己</span></div>
+  <div class="tagline">PERSONAL LAB · 自我研究空间</div>
+  <nav class="nav">
+    <button class="active" data-view="home">⌂　总览</button>
+    <button data-view="chat">◌　随时记录</button>
+    <button data-view="records">▤　经历库</button>
+    <button data-view="insights">⌁　规律分析</button>
+  </nav>
+  <div class="side-note">「先理解发生了什么，再决定要不要改变。」<br><br>Demo 数据保存在当前浏览器中。</div>
+</aside>
+<main>
+  <div class="top"><div><div class="eyebrow">YOUR PERSONAL LAB</div><h1 id="pageTitle">慢慢看清自己</h1></div><div class="date" id="today"></div></div>
+
+  <section class="view active" id="view-home">
+    <div class="hero">
+      <span class="pill">✦ 不急着给自己下结论</span>
+      <h2>你负责表达，我负责整理。</h2>
+      <p>把此刻的想法、今天发生的事，或者一个没想明白的问题说出来。这里会把它们整理成可回看的个人经历。</p>
+      <div style="margin-top:18px"><button class="primary" onclick="showView('chat')">开始记录　→</button></div>
+    </div>
+    <div class="stats">
+      <div class="stat"><strong id="statRecords">0</strong><span>条经历记录</span></div>
+      <div class="stat"><strong id="statTopics">0</strong><span>个涉及主题</span></div>
+      <div class="stat"><strong id="statExperiments">0</strong><span>个行为实验</span></div>
+    </div>
+    <div class="grid">
+      <div class="card">
+        <div class="section-title"><h2>最近记录</h2><button class="secondary" onclick="showView('records')">查看全部</button></div>
+        <div id="recentRecords"></div>
+      </div>
+      <div class="card">
+        <div class="section-title"><h2>正在形成的理解</h2><span class="tag gold">暂定假设</span></div>
+        <div class="pattern"><strong>不知道下一步时，容易停下来</strong><p>这只是待验证的可能性。可以继续观察：卡住时，是不知道怎么做，还是不想做？</p></div>
+        <div class="pattern"><strong>兴趣可能影响专注程度</strong><p>对感兴趣的事情能持续投入，不代表其他任务都能用同一种方式启动。</p></div>
+        <button class="secondary" onclick="showView('insights')">查看分析方式</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="view" id="view-chat">
+    <div class="grid">
+      <div class="card">
+        <div class="section-title"><h2>随时记录</h2><span class="tag">像聊天一样</span></div>
+        <div class="sub">不用组织得很完整。你可以写事实、想法、情绪，或者只是说“我也不知道”。</div>
+        <div class="chat" id="chatMessages" style="margin-top:18px">
+          <div class="msg bot">你好。今天有什么事情在你脑子里打转？直接说就好，不用填表。</div>
+        </div>
+        <div class="chat-input"><textarea id="chatInput" placeholder="比如：我本来打算做点事，后来又刷手机了……" rows="2"></textarea><button class="primary" id="sendBtn">发送</button></div>
+        <div class="tiny">原型说明：当前使用本地模拟整理，不会把内容发送给 AI 服务。</div>
+      </div>
+      <div class="card">
+        <h2>记录会被整理成</h2>
+        <div class="pattern"><strong>发生了什么</strong><p>保留你的原话与事件摘要。</p></div>
+        <div class="pattern"><strong>感受与行为</strong><p>只提取文本中有依据的信息，不确定的地方留空。</p></div>
+        <div class="pattern"><strong>待研究的问题</strong><p>形成一个可继续探索的问题，而不是直接给你贴标签。</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="view" id="view-records">
+    <div class="card">
+      <div class="section-title"><h2>个人经历库</h2><button class="secondary" onclick="exportData()">导出数据</button></div>
+      <div class="sub">记录保存在这台设备的当前浏览器中。可搜索、查看或删除。</div>
+      <input class="search" id="searchInput" placeholder="搜索关键词、情绪或主题…">
+      <div id="allRecords"></div>
+      <div style="margin-top:12px"><button class="secondary" onclick="clearRecords()">清空全部记录</button></div>
+    </div>
+  </section>
+
+  <section class="view" id="view-insights">
+    <div class="grid">
+      <div class="card">
+        <div class="section-title"><h2>行为规律</h2><span class="tag gold">需要更多证据</span></div>
+        <p class="sub">规律不是一次经历就能证明的。随着记录积累，这里才适合总结反复出现的情境。</p>
+        <div class="pattern"><strong>触发情境</strong><p>什么事情发生时，你更容易陷入某种情绪或行为？</p></div>
+        <div class="pattern"><strong>当时的解释</strong><p>你如何理解这件事？这个理解有没有其他可能？</p></div>
+        <div class="pattern"><strong>行为与结果</strong><p>你采取了什么行动？短期缓解了什么，又带来了什么后果？</p></div>
+        <button class="primary" onclick="showView('chat')">记录一个新例子</button>
+      </div>
+      <div class="card">
+        <h2>小型行为实验</h2>
+        <p class="sub" style="margin:8px 0 16px">把一个猜测变成可以观察的小测试。</p>
+        <label class="sub">我想验证的猜测</label><input class="field" id="hypothesis" placeholder="例如：任务不明确时，我更容易拖延">
+        <label class="sub" style="display:block;margin-top:12px">我准备尝试的一个小动作</label><textarea class="field" id="action" rows="3" placeholder="例如：开始前先写下下一步要做的具体动作"></textarea>
+        <button class="primary" style="margin-top:12px" onclick="saveExperiment()">保存实验</button>
+        <div id="experimentsList" style="margin-top:14px"></div>
+      </div>
+    </div>
+  </section>
+  <footer>Demo v0.1 · 数据仅保存在当前浏览器 localStorage。清除浏览器数据可能导致记录丢失；请使用“导出数据”备份。</footer>
+</main>
+</div>
+<div class="modal-back" id="detailModal" onclick="if(event.target===this)closeModal()"><div class="modal"><div class="section-title"><h2>经历详情</h2><button class="secondary" onclick="closeModal()">关闭</button></div><div id="detailBody"></div><div class="modal-actions"><button class="secondary" id="deleteCurrent">删除记录</button><button class="primary" onclick="closeModal()">完成</button></div></div></div>
+<script>
+const $=id=>document.getElementById(id);
+const today=new Date();
+$('today').textContent=today.toLocaleDateString('zh-CN',{year:'numeric',month:'long',day:'numeric'});
+let records=JSON.parse(localStorage.getItem('sr_records')||'[]');
+let experiments=JSON.parse(localStorage.getItem('sr_experiments')||'[]');
+let currentId=null;
+const titles={home:'慢慢看清自己',chat:'随时记录',records:'个人经历库',insights:'观察规律，不急着定论'};
+function persist(){localStorage.setItem('sr_records',JSON.stringify(records));localStorage.setItem('sr_experiments',JSON.stringify(experiments));renderAll()}
+function showView(name){document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));$('view-'+name).classList.add('active');document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('active',b.dataset.view===name));$('pageTitle').textContent=titles[name];if(name==='chat')setTimeout(()=>$('chatInput').focus(),80)}
+document.querySelectorAll('.nav button').forEach(b=>b.addEventListener('click',()=>showView(b.dataset.view)));
+function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function guessTags(text){let words=[['关系',/别人|朋友|父母|妈妈|沟通|关系|回复|评价/],['行动',/计划|开始|拖延|完成|行动|工作|做事/],['情绪',/焦虑|生气|烦|难过|失落|迷茫|空虚|害怕/],['习惯',/手机|刷|游戏|睡觉|手淫|色情|习惯/],['自我认知',/自己|性格|自卑|懒|理解|成长/]];let out=words.filter(x=>x[1].test(text)).map(x=>x[0]);return out.length?out:['日常观察']}
+function summarize(text){let t=text.trim().replace(/\s+/g,' ');return t.length>66?t.slice(0,66)+'…':t}
+function addMessage(text,who){let d=document.createElement('div');d.className='msg '+who;d.textContent=text;$('chatMessages').appendChild(d);d.scrollIntoView({behavior:'smooth',block:'nearest'})}
+function send(){let input=$('chatInput'),text=input.value.trim();if(!text)return;addMessage(text,'user');input.value='';
+let tags=guessTags(text),record={id:Date.now(),date:new Date().toISOString(),raw:text,title:summarize(text),tags,emotion:detectEmotion(text),behavior:'待补充',question:'这件事发生时，最关键的触发因素是什么？'};
+records.unshift(record);persist();
+setTimeout(()=>{addMessage('我先把这段话保存成一条经历。暂时识别到的主题：'+tags.join('、')+'。\\n\\n我不会仅凭这一段话判断你是什么样的人。可以继续告诉我：当时发生了什么，或者你最在意的部分是什么？','bot')},220);
+}
+function detectEmotion(t){let map=[['焦虑',/焦虑|担心|害怕|紧张/],['烦躁',/烦|生气|愤怒|讨厌/],['失落',/失落|难过|伤心|孤独/],['迷茫',/迷茫|不知道|不清楚/],['平静',/平静|还好|没什么/]];return (map.find(x=>x[1].test(t))||[])[0]||'待确认'}
+$('sendBtn').addEventListener('click',send);$('chatInput').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();send()}});
+function recordHtml(r){return `<div class="record"><div class="record-top"><span class="sub">${new Date(r.date).toLocaleDateString('zh-CN')} · ${esc(r.emotion)}</span><span class="tag">${esc(r.tags[0]||'观察')}</span></div><h3>${esc(r.title)}</h3><p>${esc(r.raw)}</p><div style="margin-top:9px"><button class="secondary" onclick="openDetail(${r.id})">查看详情</button></div></div>`}
+function renderAll(){
+$('statRecords').textContent=records.length;
+$('statTopics').textContent=new Set(records.flatMap(r=>r.tags)).size;
+$('statExperiments').textContent=experiments.length;
+$('recentRecords').innerHTML=records.slice(0,3).map(recordHtml).join('')||'<div class="list-empty">这里还没有记录。试着写下今天脑子里的一件事。</div>';
+let q=($('searchInput')?.value||'').toLowerCase();
+let filtered=records.filter(r=>(r.raw+' '+r.tags.join(' ')+' '+r.emotion).toLowerCase().includes(q));
+$('allRecords').innerHTML=filtered.map(recordHtml).join('')||'<div class="list-empty">没有找到记录。</div>';
+$('experimentsList').innerHTML=experiments.map((e,i)=>`<div class="record"><strong>${esc(e.hypothesis)}</strong><p>${esc(e.action)}</p><button class="secondary" onclick="deleteExperiment(${i})">删除实验</button></div>`).join('')||'<div class="list-empty">还没有实验。先写一个想验证的猜测。</div>';
+}
+$('searchInput').addEventListener('input',renderAll);
+function openDetail(id){let r=records.find(x=>x.id===id);if(!r)return;currentId=id;$('detailBody').innerHTML=`<div class="sub">${new Date(r.date).toLocaleString('zh-CN')}</div><h3>${esc(r.title)}</h3><p>${esc(r.raw)}</p><p><b>主题：</b>${r.tags.map(t=>'<span class="tag">'+esc(t)+'</span>').join(' ')}</p><p><b>情绪：</b>${esc(r.emotion)}</p><p><b>待研究问题：</b>${esc(r.question)}</p><label class="sub">补充/修改原始记录</label><textarea class="field" id="editRaw" rows="4">${esc(r.raw)}</textarea><button class="primary" style="margin-top:10px" onclick="saveEdit(${id})">保存修改</button>`;$('detailModal').classList.add('open');$('deleteCurrent').onclick=()=>{if(confirm('确定删除这条记录？')){records=records.filter(x=>x.id!==currentId);persist();closeModal()}}}
+function saveEdit(id){let r=records.find(x=>x.id===id);if(!r)return;r.raw=$('editRaw').value.trim();r.title=summarize(r.raw);r.tags=guessTags(r.raw);r.emotion=detectEmotion(r.raw);persist();closeModal()}
+function closeModal(){$('detailModal').classList.remove('open')}
+function clearRecords(){if(!records.length)return;if(confirm('确定清空全部经历记录？建议先导出备份。')){records=[];persist()}}
+function exportData(){let data={exportedAt:new Date().toISOString(),records,experiments};let blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});let a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='self-research-backup.json';a.click();URL.revokeObjectURL(a.href)}
+function saveExperiment(){let hypothesis=$('hypothesis').value.trim(),action=$('action').value.trim();if(!hypothesis||!action){alert('请填写猜测和准备尝试的小动作。');return}experiments.unshift({hypothesis,action,date:new Date().toISOString()});$('hypothesis').value='';$('action').value='';persist()}
+function deleteExperiment(i){experiments.splice(i,1);persist()}
+renderAll();
+</script>
+</body></html>
