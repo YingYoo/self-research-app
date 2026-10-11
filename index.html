@@ -307,15 +307,15 @@
     }
 
     .chat-input textarea {
-      resize: vertical;
+      resize: none;
       min-height: 48px;
-      max-height: 140px;
       flex: 1;
       border: 1px solid var(--line);
       border-radius: 13px;
-      padding: 12px;
+      padding: 12px 12px 40px;
       outline: none;
       background: #fff;
+      field-sizing: content;
     }
 
     .chat-input textarea:focus,
@@ -326,13 +326,13 @@
     .chatBtn {
       position: absolute;
       right: 5px;
-      bottom: 4px;
+      bottom: 5px;
     }
 
     .primary {
       background: var(--green);
       color: white;
-      border-radius: 12px;
+      border-radius: 10px;
       padding: 8px 14px;
       font-weight: 600;
     }
@@ -400,7 +400,6 @@
     }
 
     .record {
-      margin: 10px 0;
       padding: 10px;
       border-radius: 16px;
       background-color: #fff;
@@ -565,7 +564,9 @@
 
     .modal #detailBody .field {
       display: block;
-      resize: vertical;
+      resize: none;
+      overflow: hidden;
+      field-sizing: content;
     }
 
     .modal #detailBody>label {
@@ -651,6 +652,10 @@
         grid-template-columns: 1fr;
       }
 
+      #allRecords {
+        grid-template-columns: 1fr !important;
+      }
+
       .stats {
         gap: 7px;
       }
@@ -670,6 +675,18 @@
       .hero {
         padding: 20px;
       }
+    }
+
+    #allRecords {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      padding: 10px 0;
+    }
+
+    #recentRecords {
+      display: grid;
+      gap: 10px;
     }
   </style>
 </head>
@@ -1114,7 +1131,7 @@
       ${showPreview ? `<p>${esc(summary)}</p>` : ""}
       ${supplement ? `<p style="margin-top:6px"><span class="sub">后续补充：</span>${esc(summarize(supplement))}</p>` : ""}
       <div style="margin-top:9px">
-        <button class="secondary" onclick="openDetail(${Number(r.id)})">查看详情</button>
+        <button class="viewBtn secondary" onclick="openDetail(${Number(r.id)})">查看详情</button>
       </div>
     </div>
   `;
