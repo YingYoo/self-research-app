@@ -514,13 +514,17 @@
       background: white;
       border-radius: 20px;
       padding: 20px;
-      max-width: 480px;
+      max-width: 1000px;
       width: 100%;
       max-height: calc(100dvh - 24px);
       display: flex;
       flex-direction: column;
       min-height: 0;
       overflow: hidden;
+    }
+
+    .modal #detailBody::-webkit-scrollbar {
+      display: none;
     }
 
     .modal>.section-title {
@@ -545,6 +549,7 @@
     .modal #detailBody p {
       white-space: pre-wrap;
       overflow-wrap: anywhere;
+      margin: 10px 0;
     }
 
     .modal-actions {
@@ -561,6 +566,10 @@
     .modal #detailBody .field {
       display: block;
       resize: vertical;
+    }
+
+    .modal #detailBody>label {
+      color: var(--green)
     }
 
     .export-actions {
@@ -1171,12 +1180,12 @@
         supplementText = String(r.supplement || "").trim();
       // 构建详情视图的HTML内容
       $("detailBody").innerHTML = `
-      <div class="sub">${new Date(r.date).toLocaleString("zh-CN")}</div>
-      <label class="sub" for="editTitle">标题（独立保存，不会跟随正文变化）</label>
+      <div class="sub" style="margin-bottom:20px;color: var(--green);">记录时间：${new Date(r.date).toLocaleString("zh-CN")}</div>
+      <label class="sub" for="editTitle" style="margin-top:20px">标题（独立保存，不会跟随正文变化）</label>
       <input class="field" id="editTitle" value="${esc(titleText)}" placeholder="用一句话概括这条记录">
-      <label class="sub" for="editRaw" style="display:block;margin-top:14px">正文（最初记录，可独立修改）</label>
+      <label class="sub" for="editRaw" style="display:block;margin-top:20px">正文（最初记录，可独立修改）</label>
       <textarea class="field" id="editRaw" rows="5" placeholder="记录实际发生的事情、想法或观察">${esc(rawText)}</textarea>
-      <label class="sub" for="editSupplement" style="display:block;margin-top:14px">后续补充（独立于标题和正文）</label>
+      <label class="sub" for="editSupplement" style="display:block;margin-top:20px">后续补充（独立于标题和正文）</label>
       <textarea class="field" id="editSupplement" rows="4" placeholder="后来想到的新信息、反思或变化，可以留空">${esc(supplementText)}</textarea>
       <p><b>主题：</b>${(r.tags || []).map((t) => '<span class="tag">' + esc(t) + "</span>").join(" ")}</p>
       <p><b>情绪：</b>${esc(r.emotion || "待确认")}</p>
